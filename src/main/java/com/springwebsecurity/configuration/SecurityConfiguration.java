@@ -23,6 +23,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	UserDetailsService userDetailsService;
 	
 	@Autowired
+	AuthenticationFailureHandlerImpl authfail;
+	
+	@Autowired
+	AuthenticationSuccessHandlerImpl authsuccess;
+	
+	@Autowired
 	DataSource dataSource;
 	
 	@Autowired
@@ -37,6 +43,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	  	.antMatchers("/admin/**").access("hasRole('ADMIN')")
 	  	.antMatchers("/db/**").access("hasRole('ADMIN') and hasRole('DBA')")
 	  	.and().formLogin().loginPage("/login")
+	  	.failureHandler(authfail)
+	  	.successHandler(authsuccess)
 	  	.usernameParameter("ssoId").passwordParameter("password")
 	  	.and().rememberMe().rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository())
 	  	.tokenValiditySeconds(86400)
